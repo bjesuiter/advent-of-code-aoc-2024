@@ -82,17 +82,29 @@ const validatedReports = reports.map((report) => {
   // from here: !firstValidation.valid
 
   // remove failed index from reportLevels and check again
-  const reportLevels2 = reportLevels.filter((_, i) =>
-    i !== firstValidation.failed_level_index
-  );
-  const secondValidation = isReportValid(reportLevels2);
+  // Update: Problem - by removing the failed index we might not fix the problem.
+  // Maybe the report would be valid if we remove another index.
+  // New strategy: remove any index and check whether the report gets valid for one of them.
+  // If not, then the report is definitely invalid due to the first validation being invalid
 
-  if (secondValidation.valid) {
-    return { ...secondValidation, validationPass: 2, firstValidation };
+  for (let i = 0; i < reportLevels.length; i++) {
+    const reportLevels2 = reportLevels.filter((_, j) => j !== i);
+    const secondValidation = isReportValid(reportLevels2);
+
+    if (secondValidation.valid) {
+      return { ...secondValidation, validationPass: 2, firstValidation };
+    }
   }
 
   // from here: !secondValidation.valid
-  return { ...secondValidation, validationPass: -1, firstValidation };
+  return {
+    valid: false,
+    report,
+    reason: "no combination of removing 1 index results in a valid report",
+    reason_code: "no_valid_second_pass",
+    validationPass: -1,
+    firstValidation,
+  };
 });
 
 // Task 1 Solution:
