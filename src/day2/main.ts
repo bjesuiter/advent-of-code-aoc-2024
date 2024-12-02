@@ -60,7 +60,7 @@ function isReportValid(report: number[]) {
         valid: false,
         reason_code: "step_size_invalid",
         reason:
-          `diff between prev_level ${previous_level} and curr_level ${level} is ${diff} (must be <=1 and <=3)`,
+          `diff between prev_level ${previous_level} and curr_level ${level} is ${diff} (must be >=1 and <=3)`,
         failed_level_index: i,
       };
     }
@@ -71,22 +71,21 @@ function isReportValid(report: number[]) {
 
 const validatedReports = reports.map((report) => {
   const reportString = report.split(" ");
-  let reportLevels = reportString.map((num) => Number.parseInt(num));
+  const reportLevels = reportString.map((num) => Number.parseInt(num));
   const firstValidation = isReportValid(reportLevels);
 
   // PROBLEM DAMPENER
-
   if (firstValidation.valid) {
-    return { ...firstValidation, validationPass: 1 };
+    return { ...firstValidation, validationPass: 1, firstValidation };
   }
 
   // from here: !firstValidation.valid
 
   // remove failed index from reportLevels and check again
-  reportLevels = reportLevels.filter((_, i) =>
+  const reportLevels2 = reportLevels.filter((_, i) =>
     i !== firstValidation.failed_level_index
   );
-  const secondValidation = isReportValid(reportLevels);
+  const secondValidation = isReportValid(reportLevels2);
 
   if (secondValidation.valid) {
     return { ...secondValidation, validationPass: 2, firstValidation };
@@ -96,11 +95,26 @@ const validatedReports = reports.map((report) => {
   return { ...secondValidation, validationPass: -1, firstValidation };
 });
 
+// Task 1 Solution:
+// const safeReports = validatedReports.filter((r) =>
+//   r.valid === true && r.validationPass === 1
+// );
+// console.log(`Task 1 Safe Reports: `, safeReports.length);
 const safeReports = validatedReports.filter((r) => r.valid === true);
-console.log(`Safe Reports: `, safeReports.length);
+console.log(`Task 2 Safe Reports: `, safeReports.length);
 
 // Try 2: 362 => too low
 // Try 3: 366 => too low
 
-const invalidReports = validatedReports.filter((r) => r.valid === false);
-// console.log(`Invalid Reports: `, invalidReports);
+const invalidReports = validatedReports.filter((r) =>
+  r.valid === false && r.validationPass === -1
+);
+console.log(
+  `Invalid Reports: `,
+  invalidReports.map((r) => ({
+    report1: r.firstValidation.report,
+    reason1: r.firstValidation.reason,
+    report2: r.report,
+    reason2: r.reason,
+  })),
+);
