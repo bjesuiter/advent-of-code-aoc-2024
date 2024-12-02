@@ -66,57 +66,41 @@ function isReportValid(report: number[]) {
     }
   }
 
-  return { report, valid: true };
+  return { report, valid: true, failed_level_index: -1, reason: "" };
 }
 
 const validatedReports = reports.map((report) => {
-  const levelStrings = report.split(" ");
-  const levels = levelStrings.map((num) => Number.parseInt(num));
-
-  const result = isReportValid(levels);
+  const reportString = report.split(" ");
+  let reportLevels = reportString.map((num) => Number.parseInt(num));
+  const firstValidation = isReportValid(reportLevels);
 
   // PROBLEM DAMPENER
 
-  return result;
+  if (firstValidation.valid) {
+    return { ...firstValidation, validationPass: 1 };
+  }
 
-  // if (newState.is_failure && reportState.has_previous_failure) {
-  //   // Shortcut: if the report has already failed,
-  //   // and this level fails, then the report is invalid
-  //   return { report, valid: false };
-  // }
+  // from here: !firstValidation.valid
 
-  // if (newState.is_failure && !reportState.has_previous_failure) {
-  //   // check if report would be valid if we skip this failing level
+  // remove failed index from reportLevels and check again
+  reportLevels = reportLevels.filter((_, i) =>
+    i !== firstValidation.failed_level_index
+  );
+  const secondValidation = isReportValid(reportLevels);
 
-  //   // Shortcut: if this level is the last level, then the report will be valid when this is skipped!
-  //   if (i === levelStrings.length - 1) {
-  //     return { report, valid: true };
-  //   }
+  if (secondValidation.valid) {
+    return { ...secondValidation, validationPass: 2 };
+  }
 
-  //   // aka: do all checks for this level again, but comparing: previous_level and levelStrings[i+1]
-  //   const newState2 = isLevelValid({
-  //     ...reportState,
-  //     level: Number.parseInt(levelStrings[i + 1]),
-  //     is_failure: false,
-  //     has_previous_failure: true,
-  //   });
-
-  //   if (newState2.is_failure) {
-  //     // if the next level is also a failure, then the report is invalid
-  //     return { report, valid: false };
-  //   } else {
-  //     // if the next level is valid, then we can skip this level
-  //     reportState = newState2;
-  //     i = i + 1;
-  //     continue;
-  //   }
-  // }
+  // from here: !secondValidation.valid
+  return { ...secondValidation, validationPass: -1 };
 });
 
 const safeReports = validatedReports.filter((r) => r.valid === true);
 console.log(`Safe Reports: `, safeReports.length);
 
 // Try 2: 362 => too low
+// Try 3: 366 => too low
 
 const invalidReports = validatedReports.filter((r) => r.valid === false);
 console.log(`Invalid Reports: `, invalidReports);
