@@ -89,11 +89,11 @@ const validatedReports = reports.map((report) => {
   const secondValidation = isReportValid(reportLevels);
 
   if (secondValidation.valid) {
-    return { ...secondValidation, validationPass: 2 };
+    return { ...secondValidation, validationPass: 2, firstValidation };
   }
 
   // from here: !secondValidation.valid
-  return { ...secondValidation, validationPass: -1 };
+  return { ...secondValidation, validationPass: -1, firstValidation };
 });
 
 const safeReports = validatedReports.filter((r) => r.valid === true);
@@ -103,4 +103,4 @@ console.log(`Safe Reports: `, safeReports.length);
 // Try 3: 366 => too low
 
 const invalidReports = validatedReports.filter((r) => r.valid === false);
-console.log(`Invalid Reports: `, invalidReports);
+// console.log(`Invalid Reports: `, invalidReports);
