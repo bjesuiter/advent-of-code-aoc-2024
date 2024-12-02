@@ -36,6 +36,7 @@ function isReportValid(report: number[]) {
           reason_code: "direction_missmatch",
           reason:
             `initial_direction is increasing, but prev_level ${previous_level} is bigger than curr_level ${level}`,
+          failed_level_index: i,
         };
       }
 
@@ -46,6 +47,7 @@ function isReportValid(report: number[]) {
           reason_code: "direction_missmatch",
           reason:
             `initial_direction is decreasing, but prev_level ${previous_level} is smaller than curr_level ${level}`,
+          failed_level_index: i,
         };
       }
     }
@@ -59,6 +61,7 @@ function isReportValid(report: number[]) {
         reason_code: "step_size_invalid",
         reason:
           `diff between prev_level ${previous_level} and curr_level ${level} is ${diff} (must be <=1 and <=3)`,
+        failed_level_index: i,
       };
     }
   }
@@ -72,11 +75,9 @@ const validatedReports = reports.map((report) => {
 
   const result = isReportValid(levels);
 
-  return result;
-
-  // for (let i = 1; i < levelStrings.length; i++) {
-
   // PROBLEM DAMPENER
+
+  return result;
 
   // if (newState.is_failure && reportState.has_previous_failure) {
   //   // Shortcut: if the report has already failed,
@@ -109,8 +110,6 @@ const validatedReports = reports.map((report) => {
   //     i = i + 1;
   //     continue;
   //   }
-  // }
-
   // }
 });
 
