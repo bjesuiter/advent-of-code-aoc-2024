@@ -63,7 +63,7 @@ const validatedReports = reports.map((report) => {
     if (newState.is_failure && reportState.has_previous_failure) {
       // Shortcut: if the report has already failed,
       // and this level fails, then the report is invalid
-      return false;
+      return { report, valid: false };
     }
 
     if (newState.is_failure && !reportState.has_previous_failure) {
@@ -71,7 +71,7 @@ const validatedReports = reports.map((report) => {
 
       // Shortcut: if this level is the last level, then the report will be valid when this is skipped!
       if (i === levelStrings.length - 1) {
-        return true;
+        return { report, valid: true };
       }
 
       // aka: do all checks for this level again, but comparing: previous_level and levelStrings[i+1]
@@ -84,7 +84,7 @@ const validatedReports = reports.map((report) => {
 
       if (newState2.is_failure) {
         // if the next level is also a failure, then the report is invalid
-        return false;
+        return { report, valid: false };
       } else {
         // if the next level is valid, then we can skip this level
         reportState = newState2;
@@ -97,13 +97,13 @@ const validatedReports = reports.map((report) => {
     reportState = newState;
   }
 
-  // console.log(`Valid Report: ${report}`, {
-  //   reportState,
-  // });
-  return true;
+  return { report, valid: true };
 });
 
-const safeReports = validatedReports.filter((r) => r === true);
+const safeReports = validatedReports.filter((r) => r.valid === true);
 console.log(`Safe Reports: `, safeReports.length);
 
 // Try 2: 362 => too low
+
+const invalidReports = validatedReports.filter((r) => r.valid === false);
+console.log(`Invalid Reports: `, invalidReports);
