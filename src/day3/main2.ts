@@ -13,7 +13,7 @@ const regex = /mul\(([0-9]{1,3}),([0-9]{1,3})\)/gm;
 
 function getSumOfMulInString(input: string) {
   // Step 3: run regex over input & calculate sum
-  const regexResult = inputText.matchAll(regex);
+  const regexResult = input.matchAll(regex);
   let sum = 0;
 
   for (const [_match, factor1, factor2] of regexResult) {
@@ -77,5 +77,9 @@ for (const section of enabledSections) {
 }
 
 // Sum Task 1: 185797128
-// Sum Task 2: 3715942560 => wrong, bigger than first solution!
+// Sum Task 2: 3715942560 => wrong, bigger than first solution! (while loop)
+// Sum Task 2: 1486377024 => wrong, using inputText instead of input in getSumOfMulInString (doDonts regex)
+// Sum Task 2:  140833174 => wrong (do-don'ts regex - wrong because searching for do() till don't() may fail
+//                           due to multiple do()s comming directly after each other, while loop ignores that)
+// Sum Task 2:   89798695 => correct! (while loop again, with fix from try 2)
 console.log(`Sum of Task 2: ${sum}`);
