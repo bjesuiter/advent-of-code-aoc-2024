@@ -13,7 +13,7 @@ const regex = /mul\(([0-9]{1,3}),([0-9]{1,3})\)/gm;
 
 function getSumOfMulInString(input: string) {
   // Step 3: run regex over input & calculate sum
-  const regexResult = input.matchAll(regex);
+  const regexResult = inputText.matchAll(regex);
   let sum = 0;
 
   for (const [_match, factor1, factor2] of regexResult) {
@@ -35,42 +35,47 @@ function getSumOfMulInString(input: string) {
 // const completeSum = getSumOfMulInString(inputText);
 // console.log(`Gesamtsumme: ${completeSum}`);
 
-// Step3: collect all "enabledSections"
+// Step 3: Split inputText into `do()` and `dont't()` parts, starting with a do() part
+let position = 0;
+let mulEnabled = true;
+let endOfFile = false;
+
 const enabledSections: string[] = [];
 
-// Step 3.1
-// get start of the String until first `don't()` => this part is enabled
-const firstDontIndex = inputText.indexOf(`don't()`);
-const inputStart = inputText.slice(0, firstDontIndex);
-enabledSections.push(structuredClone(inputStart));
+while (!endOfFile) {
+  if (mulEnabled) {
+    // find next don't()
+    let nextDontIndex = inputText.indexOf(`don't()`, position);
+    if (nextDontIndex === -1) {
+      // set nextDontIndex to end of string
+      nextDontIndex = inputText.length - 1;
+      endOfFile = true;
+    }
+    const enabledSlice = inputText.slice(position, nextDontIndex);
+    enabledSections.push(enabledSlice);
+    position = nextDontIndex;
+    mulEnabled = false;
+    continue;
+  }
 
-// Step 3.2
-// Check if the last command is a do(), if so, add the last part to enabledSections
-let inputRest = inputText.slice(firstDontIndex);
-const lastDontIndex = inputRest.lastIndexOf(`don't()`);
-const lastDoIndex = inputRest.lastIndexOf(`do()`);
-if (lastDoIndex > lastDontIndex) {
-  // means: inputText ends with a do() command
-  const inputEnd = inputRest.slice(lastDoIndex);
-  enabledSections.push(structuredClone(inputEnd));
-  inputRest = inputRest.slice(0, lastDoIndex);
-}
-
-// Step 3.3: Get all parts between do() and don't()
-const doDontRegex = /(?:do\(\)).*don't\(\)/gm;
-const doDontMatches = inputRest.matchAll(doDontRegex);
-
-for (const [match] of doDontMatches) {
-  enabledSections.push(structuredClone(match));
+  // if mulEnabled === false: find next do()
+  let nextDoIndex = inputText.indexOf(`do()`, position);
+  if (nextDoIndex === -1) {
+    // set nextDoIndex to end of string
+    nextDoIndex = inputText.length - 1;
+    endOfFile = true;
+  }
+  // don't need to extract mul() operations from here, since they are disabled anyways
+  position = nextDoIndex;
+  mulEnabled = true;
 }
 
 let sum = 0;
+
 for (const section of enabledSections) {
   sum += getSumOfMulInString(section);
 }
 
 // Sum Task 1: 185797128
 // Sum Task 2: 3715942560 => wrong, bigger than first solution!
-// Sum Task 2: 1486377024 => wrong, using inputText instead of input in getSumOfMulInString
-// Sum Task 2:  140833174
 console.log(`Sum of Task 2: ${sum}`);
