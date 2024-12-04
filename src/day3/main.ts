@@ -27,4 +27,4 @@ for (const [_match, factor1, factor2] of regexResult) {
   }
 }
 
-console.log(`Gesamtsumme: ${sum}`);
+console.log(`Gesamtsumme: ${sum}`); // sum: 185797128
