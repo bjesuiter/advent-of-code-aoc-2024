@@ -28,13 +28,16 @@ const lines = inputText.split("\n");
 let rows: string[] = [];
 let columns: string[] = [];
 
+// same as links unten to rechts oben
+// Rule: summs of coordinates are equal (because: walk up 1 and right 1 = -1 + 1 = 0)
+let diagonals_ro2lu: string[] = [];
+
 // same as rechts unten to links oben
 // Rule: sum of coordinates increases by 2 each time (because: walk down 1 and right 1 = 2)
+// Index Rule: diagIndex = charIndex / (rowIndex + 1) + charIndex % 2
+// Example:
+// - Diagonal: 2-0 to
 let diagonals_lo2ru: string[] = [];
-
-// same as rechts oben to links unten
-// Rule: summs of coordinates are equal (because: walk up 1 and right 1 = -1 + 1 = 0)
-let diagonals_lu2ro: string[] = [];
 
 for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
   // fill lines
@@ -50,17 +53,27 @@ for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
     }
     columns[charIndex] += char;
   }
-
 }
+const gridRowCount = rows.length;
+const gridColCount = columns.length;
 
-console.log("Rows:", rows);
-console.log("Columns:", columns);
+console.log(`Rows (${gridRowCount}):`, rows);
+console.log(`Columns (${gridColCount}):`, columns);
 
-// Fill the diagonals from links oben to rechts unten
+// Fill the diagonals from rechts oben to links unten
 for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
   const row = rows[rowIndex];
-  for (let charIndex = 0; charIndex < row.length; charIndex++) {
-   if (rowIndex === charIndex) 
+  for (let colIndex = 0; colIndex < row.length; colIndex++) {
+    const char = row[colIndex];
+    const charIndex = rowIndex * gridColCount + colIndex;
+    const diagonalOverflow = Math.floor(charIndex / gridColCount);
+    const diagonalIndex = diagonalOverflow + (charIndex % gridColCount);
 
+    if (!diagonals_ro2lu[diagonalIndex]) {
+      diagonals_ro2lu[diagonalIndex] = "";
+    }
+    diagonals_ro2lu[diagonalIndex] += char;
   }
 }
+
+console.log(`Diagonals RO2LU: (${diagonals_ro2lu.length}):`, diagonals_ro2lu);
