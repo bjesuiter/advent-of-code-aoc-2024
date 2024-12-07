@@ -4,6 +4,8 @@ import { toCount } from "../utils/to_count.ts";
 const xmasRegex = /XMAS/;
 
 // Step 1: read input / demo input
+// --------------------------------
+
 const inputText = await Deno.readTextFile("src/day4/input_demo.txt");
 
 /**
@@ -24,6 +26,8 @@ function findXmasInLine(line: string): number {
 }
 
 // Step 2: aggregate different lines (rows, columns and diagonals)
+// ---------------------------------------------------------------
+
 const lines = inputText.split("\n");
 const rows: string[] = [];
 const columns: string[] = [];
@@ -112,3 +116,6 @@ console.log(
   diagonals_lo2ruGrid,
 );
 console.log(`Diagonals LO2RU: (${diagonals_lo2ru.length}):`, diagonals_lo2ru);
+
+// Step 3: find XMAS in all lines
+// -------------------------------
