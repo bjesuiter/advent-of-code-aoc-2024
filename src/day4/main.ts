@@ -27,16 +27,23 @@ function findXmasInLine(line: string): number {
 const lines = inputText.split("\n");
 let rows: string[] = [];
 let columns: string[] = [];
-let diagonals_left_to_right: string[] = [];
-let diagonals_right_to_left: string[] = [];
+
+// same as rechts unten to links oben
+// Rule: sum of coordinates increases by 2 each time (because: walk down 1 and right 1 = 2)
+let diagonals_lo2ru: string[] = [];
+
+// same as rechts oben to links unten
+// Rule: summs of coordinates are equal (because: walk up 1 and right 1 = -1 + 1 = 0)
+let diagonals_lu2ro: string[] = [];
 
 for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
   // fill lines
   const line = lines[lineIndex];
   rows.push(line);
 
-  //   fill columns
+  // loop through chars and fill columns and diagonals
   for (let charIndex = 0; charIndex < line.length; charIndex++) {
+    // fill columns
     const char = line[charIndex];
     if (!columns[charIndex]) {
       columns[charIndex] = "";
@@ -44,14 +51,16 @@ for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
     columns[charIndex] += char;
   }
 
-  //   for (let iDiagonal = 0; iDiagonal < line.length; iDiagonal++) {
-  //     const char = line[iDiagonal];
-  //     if (!diagonals[iDiagonal]) {
-  //       diagonals[iDiagonal] = "";
-  //     }
-  //     diagonals[iDiagonal] += char;
-  //   }
 }
 
 console.log("Rows:", rows);
 console.log("Columns:", columns);
+
+// Fill the diagonals from links oben to rechts unten
+for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+  const row = rows[rowIndex];
+  for (let charIndex = 0; charIndex < row.length; charIndex++) {
+   if (rowIndex === charIndex) 
+
+  }
+}
