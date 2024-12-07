@@ -138,4 +138,6 @@ for (const line of diagonals_lo2ru) {
   xmasCount += findXmasInLine(line);
 }
 
+// First solution: 18xx => error: hardcoded 9 instead of gridCols -1 for diagonal calculation
+// Second solution: 2536
 console.log("XMAS count:", xmasCount);
