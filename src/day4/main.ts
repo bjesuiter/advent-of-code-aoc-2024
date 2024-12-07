@@ -24,3 +24,34 @@ function findXmasInLine(line: string): number {
 }
 
 // Step 2: aggregate different lines (rows, columns and diagonals)
+const lines = inputText.split("\n");
+let rows: string[] = [];
+let columns: string[] = [];
+let diagonals_left_to_right: string[] = [];
+let diagonals_right_to_left: string[] = [];
+
+for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+  // fill lines
+  const line = lines[lineIndex];
+  rows.push(line);
+
+  //   fill columns
+  for (let charIndex = 0; charIndex < line.length; charIndex++) {
+    const char = line[charIndex];
+    if (!columns[charIndex]) {
+      columns[charIndex] = "";
+    }
+    columns[charIndex] += char;
+  }
+
+  //   for (let iDiagonal = 0; iDiagonal < line.length; iDiagonal++) {
+  //     const char = line[iDiagonal];
+  //     if (!diagonals[iDiagonal]) {
+  //       diagonals[iDiagonal] = "";
+  //     }
+  //     diagonals[iDiagonal] += char;
+  //   }
+}
+
+console.log("Rows:", rows);
+console.log("Columns:", columns);
