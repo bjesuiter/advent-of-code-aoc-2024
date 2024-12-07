@@ -25,19 +25,20 @@ function findXmasInLine(line: string): number {
 
 // Step 2: aggregate different lines (rows, columns and diagonals)
 const lines = inputText.split("\n");
-let rows: string[] = [];
-let columns: string[] = [];
+const rows: string[] = [];
+const columns: string[] = [];
 
 // same as links unten to rechts oben
 // Rule: summs of coordinates are equal (because: walk up 1 and right 1 = -1 + 1 = 0)
-let diagonals_ro2lu: string[] = [];
+const diagonals_ro2lu: string[] = [];
 
 // same as rechts unten to links oben
 // Rule: sum of coordinates increases by 2 each time (because: walk down 1 and right 1 = 2)
 // Index Rule: diagIndex = charIndex / (rowIndex + 1) + charIndex % 2
 // Example:
 // - Diagonal: 2-0 to
-let diagonals_lo2ru: string[] = [];
+const diagonals_lo2ru: string[] = [];
+const diagonals_lo2ruGrid: string[] = [];
 
 for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
   // fill lines
@@ -60,12 +61,17 @@ const gridColCount = columns.length;
 console.log(`Rows (${gridRowCount}):`, rows);
 console.log(`Columns (${gridColCount}):`, columns);
 
-// Fill the diagonals from rechts oben to links unten
+// Fill the diagonals by looping through rows and columns
+const open_lo2ru_diagonals: number[] = [];
+
 for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
   const row = rows[rowIndex];
+
   for (let colIndex = 0; colIndex < row.length; colIndex++) {
     const char = row[colIndex];
     const charIndex = rowIndex * gridColCount + colIndex;
+
+    // fill diagonals_ro2lu (sum of coordinates is equal)
     const diagonalOverflow = Math.floor(charIndex / gridColCount);
     const diagonalIndex = diagonalOverflow + (charIndex % gridColCount);
 
@@ -73,7 +79,36 @@ for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
       diagonals_ro2lu[diagonalIndex] = "";
     }
     diagonals_ro2lu[diagonalIndex] += char;
+
+    // fill diagonals_lo2ru (sum of coordinates increases by 2)
+    // Solution: manual assignment of diagonalIndex
+    if (rowIndex === 0) {
+      // for first row: fill diagonals_lo2ru with reverse column index
+      const newDiagonalIndex = 9 - colIndex;
+      open_lo2ru_diagonals[colIndex] = newDiagonalIndex;
+      if (diagonals_lo2ru[newDiagonalIndex] === undefined) {
+        diagonals_lo2ru[newDiagonalIndex] = "";
+      }
+      diagonals_lo2ru[newDiagonalIndex] += char;
+    }
+
+    if (rowIndex > 0) {
+      // for all other rows: increase all open diagonals
+      const newDiagonalIndex = open_lo2ru_diagonals[colIndex] + 1;
+      open_lo2ru_diagonals[colIndex] = newDiagonalIndex;
+      if (diagonals_lo2ru[newDiagonalIndex] === undefined) {
+        diagonals_lo2ru[newDiagonalIndex] = "";
+      }
+      diagonals_lo2ru[newDiagonalIndex] += char;
+    }
   }
+
+  diagonals_lo2ruGrid.push(open_lo2ru_diagonals.join(" "));
 }
 
 console.log(`Diagonals RO2LU: (${diagonals_ro2lu.length}):`, diagonals_ro2lu);
+console.log(
+  `Diagonals Grid LO2RU (control output): (${diagonals_lo2ruGrid.length}):`,
+  diagonals_lo2ruGrid,
+);
+console.log(`Diagonals LO2RU: (${diagonals_lo2ru.length}):`, diagonals_lo2ru);
