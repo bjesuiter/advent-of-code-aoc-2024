@@ -5,8 +5,8 @@ const xmasRegex = /XMAS/gm;
 
 // Step 1: read input / demo input
 // --------------------------------
-
-const inputText = await Deno.readTextFile("src/day4/input_demo.txt");
+// const inputText = await Deno.readTextFile("src/day4/input_demo.txt");
+const inputText = await Deno.readTextFile("src/day4/input.txt");
 
 /**
  * Finds the text XMAS in one line, testing forwards and backwards.
@@ -62,8 +62,9 @@ for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
 const gridRowCount = rows.length;
 const gridColCount = columns.length;
 
-console.log(`Rows (${gridRowCount}):`, rows);
-console.log(`Columns (${gridColCount}):`, columns);
+// Debug outputs:
+// console.log(`Rows (${gridRowCount}):`, rows);
+// console.log(`Columns (${gridColCount}):`, columns);
 
 // Fill the diagonals by looping through rows and columns
 const open_lo2ru_diagonals: number[] = [];
@@ -88,7 +89,7 @@ for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
     // Solution: manual assignment of diagonalIndex
     if (rowIndex === 0) {
       // for first row: fill diagonals_lo2ru with reverse column index
-      const newDiagonalIndex = 9 - colIndex;
+      const newDiagonalIndex = (gridColCount - 1) - colIndex;
       open_lo2ru_diagonals[colIndex] = newDiagonalIndex;
       if (diagonals_lo2ru[newDiagonalIndex] === undefined) {
         diagonals_lo2ru[newDiagonalIndex] = "";
@@ -110,7 +111,8 @@ for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
   diagonals_lo2ruGrid.push(open_lo2ru_diagonals.join(" "));
 }
 
-console.log(`Diagonals RO2LU: (${diagonals_ro2lu.length}):`, diagonals_ro2lu);
+// Debug outputs:
+// console.log(`Diagonals RO2LU: (${diagonals_ro2lu.length}):`, diagonals_ro2lu);
 console.log(
   `Diagonals Grid LO2RU (control output): (${diagonals_lo2ruGrid.length}):`,
   diagonals_lo2ruGrid,
