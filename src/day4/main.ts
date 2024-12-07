@@ -1,7 +1,7 @@
 import { toCount } from "../utils/to_count.ts";
 
 // Globals
-const xmasRegex = /XMAS/;
+const xmasRegex = /XMAS/gm;
 
 // Step 1: read input / demo input
 // --------------------------------
@@ -119,3 +119,21 @@ console.log(`Diagonals LO2RU: (${diagonals_lo2ru.length}):`, diagonals_lo2ru);
 
 // Step 3: find XMAS in all lines
 // -------------------------------
+let xmasCount = 0;
+for (const line of rows) {
+  xmasCount += findXmasInLine(line);
+}
+
+for (const line of columns) {
+  xmasCount += findXmasInLine(line);
+}
+
+for (const line of diagonals_ro2lu) {
+  xmasCount += findXmasInLine(line);
+}
+
+for (const line of diagonals_lo2ru) {
+  xmasCount += findXmasInLine(line);
+}
+
+console.log("XMAS count:", xmasCount);
