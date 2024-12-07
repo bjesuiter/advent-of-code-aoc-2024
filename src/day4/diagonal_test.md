@@ -40,19 +40,91 @@ Diagonale darunter:
 
 ## Multiplikation statt Summe? = geht nicht, alle 0-linien wären dann für alle Diagonalen null
 
-## Idee: Jede Zelle = colIndex * rowLength + rowIndex
+## Idee: diagonalIndex Algorithm umdrehen für Rows
 
-## 
+Vorbereitung: Alle Diagonal-Indexe aufschreiben
 
-| Indexe | +0   | +1   | +2   | +3   | +4   | +5   | +6   | +7   | +8   | +9   |
-| ------ | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| 0 * 10 | 0    | 1    | 2    | 3    | 4    | 5    | 6    | 7    | 8    | 9    |
-| 1 * 10 | 10   | 11   | 12   | 13   | 14   | 15   | 16   | 17   | 18   | 19   |
-| 2 * 10 | 20   | 21   | 22   | 23   | 24   | 25   | 26   | 27   | 28   | 29   |
-| 3 * 10 |      |      |      |      |      |      |      |      |      |      |
-| 4 * 10 |      |      |      |      |      |      |      |      |      |      |
-| 5 * 10 |      |      |      |      |      |      |      |      |      |      |
-| 6 * 10 |      |      |      |      |      |      |      |      |      |      |
-| 7 * 10 |      |      |      |      |      |      |      |      |      |      |
-| 8 * 10 |      |      |      |      |      |      |      |      |      |      |
-| 9 * 10 |      |      |      |      |      |      |      |      |      |      |
+### Col Based diagonal Index
+
+| Indexe | 0    | 1    | 2    | 3    | 4    |
+| ------ | ---- | ---- | ---- | ---- | ---- |
+| 0      | 0    | 5    | 6    | 7    | 8    |
+| 1      | 1    | 0    | 5    | 6    | 7    |
+| 2      | 2    | 1    | 0    | 5    | 6    |
+| 3      | 3    | 2    | 1    | 0    | 5    |
+| 4      | 4    | 3    | 2    | 1    | 0    |
+
+### Row Based diagonal Index
+
+| Indexe | 0    | 1    | 2    | 3    | 4    |
+| ------ | ---- | ---- | ---- | ---- | ---- |
+| 0      | 0    | 1    | 2    | 3    | 4    |
+| 1      | 5    | 0    | 1    | 2    | 3    |
+| 2      | 6    | 5    | 0    | 1    | 2    |
+| 3      | 7    | 6    | 5    | 0    | 1    |
+| 4      | 8    | 7    | 6    | 5    | 1    |
+| 5      | 9    | 8    | 7    | 6    | 5    |
+
+- diagonalOverflow = 0
+- openDiagonals: [
+  i0 = 0
+  i1=1
+  i2=2
+  i3=3
+  i4=4
+  ]
+- newLine Event: 
+  - diagonalOverflow += 1 = 1
+  - shift openDiagonals: [
+    i0 = i4 + 1 = 5
+    i1 = i0 = 0
+    i2 = i1 = 1
+    i3 = i2 = 2
+    i4 = i3 = 3
+    ]
+
+- newLine Event 
+  - diagonalOverflow += 1 = 2
+  - shift openDiagonals: [
+    i0 = i0 + 1 = 6
+    i1 = i0old = 5
+    i2 = i1old = 0
+    i3 = i2old = 1
+    i4 = i3old = 2
+    ]
+- newLine Event 
+  - diagonalOverflow += 1 = 3
+  - shift openDiagonals: [
+    i0 = i0 + 1 = 7
+    i1 = i0 = 6
+    i2 = i1 = 5
+    i3 = i2 = 0
+    i4 = i3 = 1
+    ]
+- newLine Event 
+  - diagonalOverflow += 1 = 4
+  - shift openDiagonals: [
+    i0 = i0 + 1 = 7
+    i1 = i0 = 6
+    i2 = i1 = 5
+    i3 = i2 = 0
+    i4 = i3 = 1
+    ]
+- newLine Event 
+  - diagonalOverflow += 1 = 4
+  - shift openDiagonals: [
+    i0 = i0 + 1 = 8
+    i1 = i0 = 7
+    i2 = i1 = 6
+    i3 = i2 = 5
+    i4 = i3 = 0
+    ]
+- newLine Event 
+  - diagonalOverflow += 1 = 5
+  - shift openDiagonals: [
+    i0 = i0 + 1 = 9
+    i1 = i0 = 8
+    i2 = i1 = 7
+    i3 = i2 = 6
+    i4 = i3 = 5
+    ]
