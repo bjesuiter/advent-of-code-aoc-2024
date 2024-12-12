@@ -39,4 +39,5 @@ S.S.S.S.SS
 .X.X.XMASX
 Take a look at the little Elf's word search. How many times does XMAS appear?
 
-## Task 2
+Your puzzle answer was 2536.
+The first half of this puzzle is complete! It provides one gold star: \*
