@@ -1,12 +1,20 @@
 import { toCount } from "../utils/to_count.ts";
+import { join } from "jsr:@std/path";
 
 // Globals
 const xmasRegex = /XMAS/gm;
 
 // Step 1: read input / demo input
 // --------------------------------
-// const inputText = await Deno.readTextFile("src/day4/input_demo.txt");
-const inputText = await Deno.readTextFile("src/day4/input.txt");
+if (!import.meta.dirname) {
+  throw new Error("import.meta.dirname not available");
+}
+// const inputText = await Deno.readTextFile(
+//   join(import.meta.dirname, "input_demo.txt"),
+// );
+const inputText = await Deno.readTextFile(
+  join(import.meta.dirname, "input.txt"),
+);
 
 /**
  * Finds the text XMAS in one line, testing forwards and backwards.
