@@ -6,11 +6,9 @@ if (!import.meta.dirname) {
   throw new Error("import.meta.dirname not available");
 }
 const inputText = await Deno.readTextFile(
-  join(import.meta.dirname, "input_demo.txt"),
+  // join(import.meta.dirname, "input_demo.txt"),
+  join(import.meta.dirname, "input.txt"),
 );
-// const inputText = await Deno.readTextFile(
-//   join(import.meta.dirname, "input.txt"),
-// );
 
 /**
  * Strategy:
@@ -70,5 +68,5 @@ for (let lineIndex = 0; lineIndex < grid.length; lineIndex++) {
   }
 }
 
-// First solution (for demo input): 9
+// First solution (for demo input): 1875 => correct!
 console.log("XMAS count:", xShapedMASCount);
