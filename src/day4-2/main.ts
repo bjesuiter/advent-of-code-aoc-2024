@@ -1,8 +1,4 @@
-import { toCount } from "../utils/to_count.ts";
 import { join } from "jsr:@std/path";
-
-// Globals
-const masRegex = /MAS/gm;
 
 // Step 1: read input / demo input
 // --------------------------------
