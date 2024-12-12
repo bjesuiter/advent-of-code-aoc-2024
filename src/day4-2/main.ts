@@ -30,23 +30,45 @@ function isInputMASorSAM(input: string): boolean {
   return input === "MAS" || input === "SAM";
 }
 
-// Step 2: loop through all lines and find the Letter A
+// Step 2: Convert inputText into 2D grid
 // ---------------------------------------------------------------
+// Grid is: First index: row, Second index: column
+const grid: string[][] = inputText.split("\n").map((line) => line.split(""));
 
-const lines = inputText.split("\n");
+// Step 2: loop through the grid and find the letter A, then check for X-shaped MAS
+// ---------------------------------------------------------------------------------
 
-for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
-  const line = lines[lineIndex];
+let xShapedMASCount = 0;
+
+for (let lineIndex = 0; lineIndex < grid.length; lineIndex++) {
+  const line = grid[lineIndex];
 
   // loop through chars
   for (let charIndex = 0; charIndex < line.length; charIndex++) {
-    // TODO: implement new Algo
+    const char = line[charIndex];
+
+    if (char === "A") {
+      const leftTop = grid[lineIndex - 1]?.[charIndex - 1];
+      const rightTop = grid[lineIndex - 1]?.[charIndex + 1];
+      const leftBottom = grid[lineIndex + 1]?.[charIndex - 1];
+      const rightBottom = grid[lineIndex + 1]?.[charIndex + 1];
+
+      if (!leftTop || !rightTop || !leftBottom || !rightBottom) {
+        // if any one of them is undefined, we can't form an X-shaped MAS
+        continue;
+      }
+
+      // Step 3: find XMAS in all lines
+      // -------------------------------
+      if (
+        isInputMASorSAM(leftTop + "A" + rightBottom) &&
+        isInputMASorSAM(rightTop + "A" + leftBottom)
+      ) {
+        xShapedMASCount++;
+      }
+    }
   }
 }
 
-// Step 3: find XMAS in all lines
-// -------------------------------
-let xShapedMASCount = 0;
-
-// First solution:
+// First solution (for demo input): 9
 console.log("XMAS count:", xShapedMASCount);
