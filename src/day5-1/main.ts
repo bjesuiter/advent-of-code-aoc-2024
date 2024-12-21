@@ -92,4 +92,5 @@ const middleNumbers = validUpdates.map((update) => {
   return update[middleIndex];
 });
 
+// First result try: 6498
 console.log(middleNumbers.reduce(toSum, 0));
