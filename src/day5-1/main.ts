@@ -8,8 +8,8 @@ if (!import.meta.dirname) {
   throw new Error("import.meta.dirname not available");
 }
 const inputText = await Deno.readTextFile(
-  join(import.meta.dirname, "input_demo.txt"),
-  //   join(import.meta.dirname, "input.txt"),
+  //   join(import.meta.dirname, "input_demo.txt"),
+  join(import.meta.dirname, "input.txt"),
 );
 
 const [ruleLines, updateLines] = inputText.split("\n\n");
