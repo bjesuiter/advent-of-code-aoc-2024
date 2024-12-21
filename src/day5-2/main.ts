@@ -8,8 +8,8 @@ if (!import.meta.dirname) {
   throw new Error("import.meta.dirname not available");
 }
 const inputText = await Deno.readTextFile(
-  join(import.meta.dirname, "input_demo.txt"),
-  // join(import.meta.dirname, "input.txt"),
+  // join(import.meta.dirname, "input_demo.txt"),
+  join(import.meta.dirname, "input.txt"),
 );
 
 const [ruleLines, updateLines] = inputText.split("\n\n");
@@ -108,4 +108,5 @@ const middleNumbers = orderedInvalidUpdates.map((update) => {
   return update[middleIndex];
 });
 
+// First Try: 5017 => Success!
 console.log(middleNumbers.reduce(toSum, 0));
