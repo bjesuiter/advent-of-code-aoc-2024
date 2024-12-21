@@ -8,8 +8,8 @@ if (!import.meta.dirname) {
   throw new Error("import.meta.dirname not available");
 }
 const inputText = await Deno.readTextFile(
-  //   join(import.meta.dirname, "input_demo.txt"),
-  join(import.meta.dirname, "input.txt"),
+  join(import.meta.dirname, "input_demo.txt"),
+  // join(import.meta.dirname, "input.txt"),
 );
 
 const [ruleLines, updateLines] = inputText.split("\n\n");
@@ -84,13 +84,28 @@ function isUpdateValid(update: number[]) {
   return true;
 }
 
-// Step 4: Make a list of all correctly ordered updates
-const validUpdates = updates.filter(isUpdateValid);
+// Step 4: Make a list of all invalid ordered updates
+const invalidUpdates = updates.filter((update) =>
+  isUpdateValid(update) === false
+);
 
-const middleNumbers = validUpdates.map((update) => {
+// Step 5: Order the invalid updates based on the rules
+const orderedInvalidUpdates = invalidUpdates.map((update) =>
+  update.toSorted((a, b) => {
+    if (printBeforeRules.has(a) && printBeforeRules.get(a)!.has(b)) {
+      return -1; // a comes before b
+    }
+    if (printBeforeRules.has(b) && printBeforeRules.get(b)!.has(a)) {
+      return 1; // b comes before a
+    }
+    return 0;
+  })
+);
+
+// Step 6: Find the middle number of each ordered invalid update
+const middleNumbers = orderedInvalidUpdates.map((update) => {
   const middleIndex = Math.floor(update.length / 2);
   return update[middleIndex];
 });
 
-// First result try: 6498
 console.log(middleNumbers.reduce(toSum, 0));
